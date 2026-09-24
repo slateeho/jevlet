@@ -1,0 +1,21 @@
+apiVersion: jevlet.io/v1alpha1
+kind: JevPolicy
+metadata:
+  name: workload-recovery
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      jevlet.io/watch: "true"
+  signals:
+    kubernetesEvents: true
+    maxEvents: 8
+  decision:
+    model: jev-latest
+  execution:
+    mode: guarded
+    allowedActions: [noop, escalate, restart_pod]
+    minimumConfidence: 0.92
+    minimumSafeToExecute: 0.95
+    maximumRiskScore: 1.5
+    cooldown: 5m
